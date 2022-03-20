@@ -41,5 +41,12 @@ pipeline {
                 archiveArtifacts(artifacts: 'frontend/dist/frontend/*')
             }
         }
+        stage('Curlik') {
+            steps {
+                sh '''#!/bin/bash
+                curl -X POST -H 'Content-type: application/json' --data '{"text":"**Илья Задохин** собрал приложение."}' https://hooks.slack.com/services/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 
+                '''
+            }
+        }
     }
 }

@@ -45,7 +45,8 @@ sonarqube-backend-sast:
     - cd backend
     - >
       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
-      -Dsonar.projectKey=04_ИЛЬЯЗАДОХИН_БЭКЭНД
+      -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
 
@@ -56,7 +57,8 @@ sonarqube-frontend-sast:
     - cd frontend 
     - >
       sonar-scanner
-      -Dsonar.projectKey=04_ИЛЬЯЗАДОХИН_ФРОНТЭНД
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_ФРОНТЭНД
+      -Dsonar.projectKey=04_ILYAZADOKHIN_FRONTEND
       -Dsonar.sources=.
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 

@@ -46,7 +46,7 @@ sonarqube-backend-sast:
     - >
       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true \
       -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-      -Dsonar.host.url="${SONARQUBE_URL}" \
+      -Dsonar.host.url=https://${SONAR_URL} \
       -Dsonar.login=${SONAR_LOGIN} 
 
 sonarqube-frontend-sast:
@@ -58,5 +58,5 @@ sonarqube-frontend-sast:
       sonar-scanner \
       -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
       -Dsonar.sources=. \ 
-      -Dsonar.host.url=${SONARQUBE_URL} \
+      -Dsonar.host.url=https://${SONAR_URL} \
       -Dsonar.login=${SONAR_LOGIN} 

@@ -22,6 +22,7 @@ build-code-job:  # задача с именем build-code-job
     paths:
       - sausage-store-0.0.1/public_html  # сохранение собранного фронтэнда как артефакт
       - sausage-store-0.0.1/sausage-store-0.0.1.jar # сохранение собранного бэкенда как артефакт
+      - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
     reports:
       dotenv: CI_JOB_ID.txt # сохранение файла с переменными как артефакт
       junit: backend/target/surefire-reports/**/*.xml #Передача результатов тестов
@@ -31,3 +32,8 @@ slack-notification: # курлык
   script:
     - > 
       curl -X POST -H 'Content-type: application/json' --data '{"text":"**Илья Задохин** собрал в Gitlab."}' https://hooks.slack.com/services/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 
+
+spotbugs-sast:
+  variables:
+    COMPILE: "false"
+    MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository

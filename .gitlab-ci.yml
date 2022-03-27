@@ -48,6 +48,7 @@ sonarqube-backend-sast:
       -Dsonar.projectKey=${SONAR_PROJECT_KEY}
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД
 
 sonarqube-frontend-sast:
   stage: test
@@ -60,3 +61,4 @@ sonarqube-frontend-sast:
       -Dsonar.sources=.
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_ФРОНТЭНД

@@ -1,7 +1,9 @@
 stages:
   - build
   - notification
-  #testing?
+  - test
+include:
+  - template: Security/SAST.gitlab-ci.yml 
    
 build-code-job:  # задача с именем build-code-job
   stage: build   # этап build

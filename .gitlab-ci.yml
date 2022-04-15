@@ -1,5 +1,9 @@
+variables:
+    VERSION: 1.0.${CI_PIPELINE_ID}
+
 stages:
   - build
+  - release
   - notification
   - test
 include:
@@ -10,28 +14,42 @@ build-code-job:  # задача с именем build-code-job
   script:        # объявление скрипта
     - echo "ARTIFACT_JOB_ID=${CI_JOB_ID}" > CI_JOB_ID.txt  # сохранение номера задачи в файл, чтобы в дальнейшем использовать для копирования артефакта  
     - cd backend 
-    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository # запуск сборки кода
+    - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository # запуск сборки кода
     - cd ../frontend 
     - npm install # загрузка всех сторонних зависимостей
     - npm run build # запуск сборки кода
     - cd .. 
-    - mkdir sausage-store-0.0.1  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
-    - mv backend/target/sausage-store-0.0.1-SNAPSHOT.jar sausage-store-0.0.1/sausage-store-0.0.1.jar # копирование собранного бэкенда
-    - mv frontend/dist/frontend sausage-store-0.0.1/public_html # копирование собранного фронтэнда
+    - mkdir sausage-store-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
+    - mv backend/target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar # копирование собранного бэкенда
+    - mv frontend/dist/frontend sausage-store-${VERSION}/public_html # копирование собранного фронтэнда
   artifacts:
     paths:
-      - sausage-store-0.0.1/public_html  # сохранение собранного фронтэнда как артефакт
-      - sausage-store-0.0.1/sausage-store-0.0.1.jar # сохранение собранного бэкенда как артефакт
+      - sausage-store-${VERSION}/public_html  # сохранение собранного фронтэнда как артефакт
+      - sausage-store-${VERSION}/sausage-store-${VERSION}.jar # сохранение собранного бэкенда как артефакт
       - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
     reports:
       dotenv: CI_JOB_ID.txt # сохранение файла с переменными как артефакт
       junit: backend/target/surefire-reports/**/*.xml #Передача результатов тестов
+
+upload-release:
+    stage: release
+    script:
+      - cd backend
+      - mvn -s settings.xml deploy -DskipTests
+      - cd ../frontend 
+      - tar czvf sausage-store-${VERSION}.tar.gz sausage-store-${VERSION}
+      - >
+        curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_REPO_URL}/sausage-store-front/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.g
+   
+
+
+
     
 slack-notification: # курлык
   stage: notification
   script:
     - > 
-      curl -X POST -H 'Content-type: application/json' --data '{"text":"**Илья Задохин** собрал приложение в Gitlab (SAST+SonarQube)."}' https://hooks.slack.com/services/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 
+      curl -X POST -H 'Content-type: application/json' --data '{"text":"Вышла новая версия сосисчной - ${VERSION}. Скачать фронт можно по ссылке — <ссылка на фронт>. Скачать бэкенд можно по ссылке — <ссылка на бэкенд>"}' https://hooks.slack.com/services/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 
 
 spotbugs-sast:
   variables:

@@ -32,10 +32,10 @@ build-code-job:  # задача с именем build-code-job
       junit: backend/target/surefire-reports/**/*.xml #Передача результатов тестов
 
 upload-release:
-    stage: release
-    script:
-      - cd backend
-      - mvn -e -s settings.xml deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository
+  stage: release
+  script:
+    - cd backend
+    - mvn -e -s settings.xml deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/

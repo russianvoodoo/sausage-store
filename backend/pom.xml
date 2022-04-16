@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>${version.application}</version>
+        <version>2.5.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.yandex.practicum.devops</groupId>
     <artifactId>sausage-store</artifactId>
-    <version>1.0.0</version>
+    <version>${version.application}</version>
     <name>sausage-store</name>
     <description>Backend for sausage-store</description>
     <properties>

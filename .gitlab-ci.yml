@@ -35,7 +35,7 @@ upload-release:
     stage: release
     script:
       - cd backend
-      - mvn -s settings.xml deploy -DskipTests 
+      - mvn -s settings.xml deploy -DskipTests -Dversion.application=${VERSION}
       #- cd ../frontend 
       #- tar czvf sausage-store-${VERSION}.tar.gz sausage-store-${VERSION}
       #- >

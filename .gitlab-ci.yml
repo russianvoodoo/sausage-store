@@ -3,7 +3,7 @@ variables:
 
 stages:
   - build
-  #- release
+  - release
   #- notification
   #- test
 #include:
@@ -15,35 +15,35 @@ build-code-job:  # задача с именем build-code-job
     - echo "ARTIFACT_JOB_ID=${CI_JOB_ID}" > CI_JOB_ID.txt  # сохранение номера задачи в файл, чтобы в дальнейшем использовать для копирования артефакта  
     - cd backend 
     - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository # запуск сборки кода
-    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml 
-#    - cd ../frontend 
-#    - npm install # загрузка всех сторонних зависимостей
-#    - npm run build # запуск сборки кода
-#    - cd .. 
-    #- mkdir sausage-store-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
-    #- mv backend/target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar # копирование собранного бэкенда
-    #- mv frontend/dist/frontend sausage-store-${VERSION}/public_html # копирование собранного фронтэнда
-#  artifacts:
-#    paths:
-      #- sausage-store-${VERSION}/public_html  # сохранение собранного фронтэнда как артефакт
-#      #- sausage-store-${VERSION}/sausage-store-${VERSION}.jar # сохранение собранного бэкенда как артефакт
-#      - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
-#    reports:
-#      dotenv: CI_JOB_ID.txt # сохранение файла с переменными как артефакт
-#      junit: backend/target/surefire-reports/**/*.xml #Передача результатов тестов
+    - cd ../frontend 
+    - npm install # загрузка всех сторонних зависимостей
+    - npm run build # запуск сборки кода
+    - cd .. 
+    - mkdir sausage-store-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
+    - mv backend/target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar # копирование собранного бэкенда
+    - mv frontend/dist/frontend sausage-store-${VERSION}/public_html # копирование собранного фронтэнда
+  artifacts:
+    paths:
+      - sausage-store-${VERSION}/public_html  # сохранение собранного фронтэнда как артефакт
+      - sausage-store-${VERSION}/sausage-store-${VERSION}.jar # сохранение собранного бэкенда как артефакт
+      - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
+    reports:
+      dotenv: CI_JOB_ID.txt # сохранение файла с переменными как артефакт
+      junit: backend/target/surefire-reports/**/*.xml #Передача результатов тестов
 
-#upload-release:
-#  stage: release
-#  script:
-#    - cd backend
-#    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml 
-#  artifacts:
-#    paths:
-#      - ${CI_PROJECT_DIR}/.m2/
-      #- cd ../frontend 
-      #- tar czvf sausage-store-${VERSION}.tar.gz sausage-store-${VERSION}
-      #- >
-      #  curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_FRONTEND_REPO_URL}/sausage-store-front/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.g
+upload-release:
+  stage: release
+  script:
+    - cd backend
+    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml || true
+    - cd ../frontend 
+    - tar czvf sausage-store-${VERSION}.tar.gz sausage-store-${VERSION}
+    - >
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_FRONTEND_REPO_URL}/sausage-store-front/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz
+  artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/.m2/
+      
    
 
 

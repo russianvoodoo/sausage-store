@@ -35,8 +35,7 @@ upload-release:
   stage: release
   script:
     - cd backend
-    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml || true
-    - cd ../frontend 
+    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml || true 
     - tar czvf sausage-store-${VERSION}.tar.gz sausage-store-${VERSION}
     - >
       curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_FRONTEND_REPO_URL}/sausage-store-front/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz

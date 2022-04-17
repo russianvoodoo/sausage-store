@@ -49,18 +49,18 @@ build-code-job:  # задача с именем build-code-job
 
 
     
-slack-notification: # курлык
+#slack-notification: # курлык
   stage: notification
   script:
     - > 
       curl -X POST -H 'Content-type: application/json' --data '{"text":"Вышла новая версия сосисчной - ${VERSION}. Скачать фронт можно по ссылке — <ссылка на фронт>. Скачать бэкенд можно по ссылке — <ссылка на бэкенд>"}' https://hooks.slack.com/services/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 
 
-spotbugs-sast:
+#spotbugs-sast:
   variables:
     COMPILE: "false"
     MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
 
-sonarqube-backend-sast:
+#sonarqube-backend-sast:
   stage: test
   image: maven:3.8-openjdk-16
   script:
@@ -72,7 +72,7 @@ sonarqube-backend-sast:
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
 
-sonarqube-frontend-sast:
+#sonarqube-frontend-sast:
   stage: test
   image: sonarsource/sonar-scanner-cli
   script:

@@ -49,7 +49,7 @@ slack-notification: # курлык
   stage: notification
   script:
     - > 
-      curl -X POST -H "Content-type: application/json" --data '{"text": "Вышла новая версия сосисчной - `'${VERSION}'`\nСкачать фронт можно по ссылке — <'${NEXUS_FRONTEND_REPO_URL}'/sausage-store-front/sausage-store/'${VERSION}'/sausage-store-'${VERSION}'.tar.gz|backend>\nСкачать бэкенд можно по ссылке — <'${NEXUS_BACKEND_REPO_URL}'/sausage-store/com/yandex/practicum/devops/sausage-store/'${VERSION}'/sausage-store-'${VERSION}'.jar|frontend>"}' https://hooks.slack.com/services/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
+      curl -X POST -H "Content-type: application/json" --data '{"text": "Вышла новая версия сосисчной - `'${VERSION}'`\nСкачать фронт можно по ссылке — <'${NEXUS_FRONTEND_REPO_URL}'sausage-store/'${VERSION}'/sausage-store-'${VERSION}'.tar.gz|backend>\nСкачать бэкенд можно по ссылке — <'${NEXUS_BACKEND_REPO_URL}'com/yandex/practicum/devops/sausage-store/'${VERSION}'/sausage-store-'${VERSION}'.jar|frontend>"}' https://hooks.slack.com/services/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
 
 #spotbugs-sast:
 #  variables:

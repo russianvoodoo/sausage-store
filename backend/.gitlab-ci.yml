@@ -4,11 +4,31 @@ variables:
    JAVA_OPTS: -XX:MaxRAMPercentage=90
 
 stages:
+   - deploy
    - build
    - release
 
+before_script:
+  #устанавливаем ssh-agent для удобства аутентификации по ssh
+  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  #сохраняем сгенеренный ранее приватный ключ для раннера
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 600 ~/.ssh
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  script:
+     #выполняем простую команду для проверки
+     - ssh ${DEV_USER}@${DEV_HOST} "id"
+
 build:
    stage: build
+   when: manual #                                  ДОБАВИЛ РУЧНОЙ ЗАПУСК!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    script:
       - cd backend
       - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH}
@@ -18,6 +38,7 @@ build:
 
 release:
    stage: release
+   when: manual #                                  ДОБАВИЛ РУЧНОЙ ЗАПУСК!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    script:
       - cd backend
       - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml

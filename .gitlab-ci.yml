@@ -36,7 +36,7 @@ upload-release:
   stage: release
   script:
     - cd backend
-    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml || true 
+    - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml #|| true 
     - cd .. 
     - tar czvf sausage-store-${VERSION}.tar.gz sausage-store-${VERSION}
     - >

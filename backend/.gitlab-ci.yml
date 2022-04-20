@@ -30,7 +30,6 @@ build:
       - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH}
    rules:
       - changes:
-      - when: manual #                                  ДОБАВИЛ РУЧНОЙ ЗАПУСК!!!!!!!!!!!!!!!!!!!!!!!!!!!!
            - backend/*
 
 release:
@@ -40,5 +39,4 @@ release:
       - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
    rules:
       - changes:
-      - when: manual #                                  ДОБАВИЛ РУЧНОЙ ЗАПУСК!!!!!!!!!!!!!!!!!!!!!!!!!!!!
            - backend/*

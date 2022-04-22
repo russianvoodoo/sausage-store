@@ -1,7 +1,7 @@
 [Service]
 #WorkingDirectory=/var/www-data/dist/
 User=front-user
-ExecStart=http-server /var/www-data/dist/frontend/ -p 443--proxy http://localhost:8080
+ExecStart=http-server /var/www-data/dist/frontend/ -p 443 --proxy http://localhost:8080
 StandardOutput=file:/logs/out-front.log
 Type=simple
 Restart=always

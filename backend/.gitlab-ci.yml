@@ -25,7 +25,6 @@ spotbugs-sast:
   variables:
     SAST_JAVA_VERSION: "11"
     COMPILE: "false"
-    - echo ${CI_PROJECT_DIR}
 
 sonarqube-backend-sast:
   stage: test

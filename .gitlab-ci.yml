@@ -54,7 +54,7 @@ sonarqube-frontend-sast:
   image: sonarsource/sonar-scanner-cli
   script:
     - cd frontend 
-   - >
+    - >
       sonar-scanner
       -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_ФРОНТЭНД
       -Dsonar.projectKey=04_ILYAZADOKHIN_FRONTEND

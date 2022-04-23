@@ -5,8 +5,8 @@ variables:
    
 stages:
    - build
-   - release
    - test
+   - release
    - notification
    - deploy
 include:
@@ -17,15 +17,6 @@ build:
    script:
       - cd backend
       - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH}
-   rules:
-      - changes:
-           - backend/*
-
-release:
-   stage: release
-   script:
-      - cd backend
-      - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
    rules:
       - changes:
            - backend/*
@@ -47,6 +38,15 @@ sonarqube-backend-sast:
       -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
+
+release:
+   stage: release
+   script:
+      - cd backend
+      - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
+   rules:
+      - changes:
+           - backend/*
 
 slack-notification: # курлык
   stage: notification

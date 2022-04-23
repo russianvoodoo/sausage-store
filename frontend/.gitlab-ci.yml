@@ -3,6 +3,7 @@ variables:
 
 stages:
    - build
+   - test
    - release
    - notification
    - deploy 
@@ -22,6 +23,19 @@ build:
    rules:
       - changes:
            - frontend/*
+
+sonarqube-frontend-sast:
+  stage: test
+  image: sonarsource/sonar-scanner-cli
+  script:
+    - cd frontend 
+    - >
+      sonar-scanner
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_ФРОНТЭНД
+      -Dsonar.projectKey=04_ILYAZADOKHIN_FRONTEND
+      -Dsonar.sources=.
+      -Dsonar.host.url=https://${SONAR_URL}
+      -Dsonar.login=${SONAR_LOGIN} 
 
 release:
    stage: release

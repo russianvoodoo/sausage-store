@@ -25,7 +25,7 @@ spotbugs-sast:
   variables:
     SAST_JAVA_VERSION: "11"
     COMPILE: "false"
-    MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
+    - echo ${CI_PROJECT_DIR}
 
 sonarqube-backend-sast:
   stage: test

@@ -36,6 +36,7 @@ slack-notification: # курлык
 
 spotbugs-sast:
   variables:
+    SAST_JAVA_VERSION: "11"
     COMPILE: "false"
     MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
 

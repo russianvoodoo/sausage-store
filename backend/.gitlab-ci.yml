@@ -23,6 +23,9 @@ build:
    artifacts:
      paths:
         - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
+   environment:
+     name: production
+
 
 spotbugs-sast:
   variables:

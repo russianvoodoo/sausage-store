@@ -23,9 +23,6 @@ build:
    artifacts:
      paths:
         - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
-   environment:
-     name: production
-
 
 spotbugs-sast:
   variables:
@@ -62,6 +59,8 @@ slack-notification: # курлык
 
 deploy:
    stage: deploy
+   environment:
+     name: production
    when: manual
    before_script:
      - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'

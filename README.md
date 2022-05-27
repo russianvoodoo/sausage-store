@@ -9,13 +9,13 @@
 * Backend  – Java 16, Spring Boot, Spring Data.
 * Database – POSTGRESQL - 13
 
-- SINGLE Node
+**SINGLE Node**
 -     PSQL_ADMIN="dbadmin"
 -     PSQL_PASSWORD="password"
 -     PSQL_HOST="rc1a-5b3o1bccrkvwfljc.mdb.yandexcloud.net"
 -     PSQL_PORT="6432"
 -     PSQL_DBNAME="sausagestore"
-- CLUSTER Node
+**CLUSTER Node**
 -     PSQL_ADMIN="dbadmin"
 -     PSQL_PASSWORD="password"
 -     PSQL_HOST="c-c9qkat7gh3qe4ftqqfdd.rw.mdb.yandexcloud.net"

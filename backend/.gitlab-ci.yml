@@ -16,7 +16,7 @@ build:
    stage: build
    script:
       - cd backend
-      - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH}
+      - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -Dmaven.test.skip
    rules:
       - changes:
            - backend/*   
@@ -73,4 +73,4 @@ deploy:
      - chmod 644 ~/.ssh/known_hosts
    script:
     - scp ./backend/sausage-store-backend.service ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/sausage-store-backend.service
-    - ssh ${DEV_USER}@${DEV_HOST} "export "CURRENT_VERSION=${VERSION}"; export "VERSION=${VERSION}"; export "DEV_HOST=${DEV_HOST}";export "NEXUS_BACKEND_REPO_URL=${NEXUS_BACKEND_REPO_URL}"; export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"; export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}"; export "POSTGRES_PASS=${POSTGRES_PASS}"; setsid /bin/bash -s " < ./backend/deploy.sh
+    - ssh ${DEV_USER}@${DEV_HOST} "export "CURRENT_VERSION=${VERSION}"; export "VERSION=${VERSION}"; export "DEV_HOST=${DEV_HOST}";export "NEXUS_BACKEND_REPO_URL=${NEXUS_BACKEND_REPO_URL}"; export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"; export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}";export "POSTGRES_PASS=${POSTGRES_PASS}"; setsid /bin/bash -s " < ./backend/deploy.sh

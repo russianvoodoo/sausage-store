@@ -13,9 +13,10 @@ ExecStart=/usr/lib/jvm/java-16-openjdk-amd64/bin/java \
 -Dmyserver.bindPort='8080' \
 -Dmyserver.hostName='Sausage-store' \
 -jar '/home/jarservice/sausage-store.jar' \
---spring.datasource.url='jdbc:postgresql://c-c9qkat7gh3qe4ftqqfdd.rw.mdb.yandexcloud.net:6432/sausagestore' \
+--spring.datasource.url='jdbc:postgresql://c-c9q0i2gb2i7lof23dn4u.rw.mdb.yandexcloud.net:6432/sausagestore' \
 --spring.datasource.username='dbadmin' \
---spring.datasource.password='${POSTGRES_PASS}'
+--spring.datasource.password=password \
+--spring.flyway.baselineOnMigrate=true
 SuccessExitStatus=143
 
 [Install]

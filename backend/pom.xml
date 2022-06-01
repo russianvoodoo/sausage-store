@@ -137,9 +137,9 @@
                     <locations>
                         <location>classpath:db/migration</location>
                     </locations>
-                    <url>jdbc:postgresql://c-c9qkat7gh3qe4ftqqfdd.rw.mdb.yandexcloud.net:6432;database=sausagestore</url>
+                    <url>jdbc:postgresql://c-c9q0i2gb2i7lof23dn4u.rw.mdb.yandexcloud.net:6432;database=sausagestore</url>
                     <user>dbadmin</user>
-                    <password>password</password>
+                    <password>${POSTGRES_PASS}</password>
                     <schemas>
                         <schema>public</schema>
                     </schemas>

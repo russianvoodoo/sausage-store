@@ -5,6 +5,7 @@ Description=Sausage-store
 User=jarservice
 Environment=REPORT_PATH=/var/www-data/htdocs/
 Environment=LOG_PATH=/
+EnvironmentFile=/etc/systemd/system/sausage-store-backend.service.d/sausage-store.conf
 StandardOutput=file:/logs/out.log
 Restart=always
 ExecStart=/usr/lib/jvm/java-16-openjdk-amd64/bin/java \

@@ -40,6 +40,8 @@ spotbugs-sast:
 sonarqube-backend-sast:
   stage: test
   image: maven:3.8-openjdk-16
+  dependencies:
+    - make-artifacts
   script:
     - cd backend
     - >

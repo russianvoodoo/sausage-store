@@ -28,7 +28,7 @@ make-artifacts:
           - backend/*   
   artifacts:
     paths:
-      - ${CI_PROJECT_DIR}/backend/.m2 # сохранение зависимостей для SAST 
+      - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
       - ${CI_PROJECT_DIR}/backend/sausage-store-${VERSION}/sausage-store-${VERSION}.jar # сохранение собранного бэкенда как артефакт
 
 spotbugs-sast:

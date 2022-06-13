@@ -5,30 +5,58 @@ variables:
    
 stages:
    - build
+   - test
    - release
+   - notification
    - deploy
 include:
+   - template: Security/SAST.gitlab-ci.yml 
    - project: 'templates/ci'
      file: 'DockerInDockerTemplate.yml'
 
-build-backend:
-   stage: build
-   image: docker:20.10.12-dind-rootless
-   before_script:
-     - until docker info; do sleep 1; done
-     # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
-     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+make-artifacts:
+  stage: build
+  script:
+    - echo ${CI_PROJECT_DIR}
+    - echo "ARTIFACT_JOB_ID=${CI_JOB_ID}" > CI_JOB_ID.txt  # сохранение номера задачи в файл, чтобы в дальнейшем использовать для копирования артефакта  
+    - cd backend
+    - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -Dmaven.test.skip
+    - mkdir sausage-store-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
+    - cp target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar # копирование собранного бэкенда
+  rules:
+     - changes:
+          - backend/*   
+  artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/backend/.m2 # сохранение зависимостей для SAST 
+      - ${CI_PROJECT_DIR}/backend/sausage-store-${VERSION}/sausage-store-${VERSION}.jar # сохранение собранного бэкенда как артефакт
+
+spotbugs-sast:
+  variables:
+    SAST_JAVA_VERSION: "11"
+    COMPILE: "false"
+    MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
+
+sonarqube-backend-sast:
+  stage: test
+  image: maven:3.8-openjdk-16
+  script:
+    - cd backend
+    - >
+      mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
+      -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД
+      -Dsonar.host.url=https://${SONAR_URL}
+      -Dsonar.login=${SONAR_LOGIN} 
+
+release:
+   stage: release
    script:
-     - cd backend
-     - >
-        docker build
-        --build-arg VERSION=$VERSION
-        --tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-        .
-     - docker push $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+      - cd backend
+      - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
    rules:
       - changes:
-           - backend/*   
+           - backend/*
 
 upload-backend-latest:
   variables:
@@ -47,12 +75,14 @@ upload-backend-latest:
 deploy-backend:
   stage: deploy
   image: alpine:3.15.0
+  dependencies:
+    - make-artifacts
   # если хотим сделать деплой по кнопке
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: manual
-    - if: '$CI_COMMIT_BRANCH == "test"'
-      when: manual
+  #rules:
+  #  - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  #    when: manual
+  #  - if: '$CI_COMMIT_BRANCH == "test"'
+  #    when: manual
   before_script:
     - apk add openssh-client bash
     - eval $(ssh-agent -s)

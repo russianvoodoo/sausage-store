@@ -52,14 +52,14 @@ sonarqube-backend-sast:
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
 
-release:
-   stage: release
-   script:
-      - cd backend
-      - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
-   rules:
-      - changes:
-           - backend/*
+#release:
+#   stage: release
+#   script:
+#      - cd backend
+#      - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
+#   rules:
+#      - changes:
+#           - backend/*
 
 build-backend:
    stage: docker-build

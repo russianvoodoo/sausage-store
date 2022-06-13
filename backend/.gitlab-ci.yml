@@ -6,6 +6,7 @@ variables:
 stages:
    - build
    - test
+   - docker-build
    - release
    - notification
    - deploy
@@ -60,25 +61,45 @@ release:
       - changes:
            - backend/*
 
-#upload-backend-latest:
-#  variables:
-#    GIT_STRATEGY: none
-#  image: docker:20.10.12-dind-rootless
-#  stage: release
-#  before_script:
-#    - until docker info; do sleep 1; done
-#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#  script:
-#    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-#    # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
-#    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
-#    - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
+build-backend:
+   stage: docker-build
+   image: docker:20.10.12-dind-rootless
+   dependencies:
+     - make-artifacts
+   before_script:
+     - cp ${CI_PROJECT_DIR}/backend/sausage-store-${VERSION}/sausage-store-${VERSION}.jar .
+     - until docker info; do sleep 1; done
+     # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
+     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+   script:
+     - cd backend
+     - >
+        docker build
+        --build-arg VERSION=$VERSION 
+        --tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+        .
+     - docker push $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+   rules:
+      - changes:
+           - backend/*   
+
+upload-backend-latest:
+  variables:
+    GIT_STRATEGY: none
+  image: docker:20.10.12-dind-rootless
+  stage: release
+  before_script:
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+    # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
+    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
+    - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
 
 deploy-backend:
   stage: deploy
   image: alpine:3.15.0
-  dependencies:
-    - make-artifacts
   # если хотим сделать деплой по кнопке
   #rules:
   #  - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'

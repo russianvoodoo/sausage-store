@@ -45,6 +45,7 @@ sonarqube-backend-sast:
     - make-artifacts
   script:
     - cd backend
+    - curl https://crls.yandex.net/allCAs.pem --create-dirs -o ~/.postgresql/root.crt
     - >
       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
       -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND

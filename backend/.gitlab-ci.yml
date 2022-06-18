@@ -46,6 +46,7 @@ sonarqube-backend-sast:
   script:
     - cd backend
     - curl https://storage.yandexcloud.net/cloud-certs/CA.pem -o YandexInternalRootCA.crt
+    - keytool -importcert -file YandexInternalRootCA.crt
     - curl https://crls.yandex.net/allCAs.pem --create-dirs -o ~/.postgresql/root.crt
     - >
       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true -Dspring.cloud.vault.token=myroot

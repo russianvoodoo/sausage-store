@@ -121,9 +121,9 @@ deploy-backend:
        #export "SPRING_DATASOURCE_USERNAME=${PSQL_USER}";
        #export "SPRING_DATASOURCE_PASSWORD=${PSQL_PASSWORD}";
        #export "SPRING_DATA_MONGODB_URI=${MONGO_DATA}";
-       export "VAULT_TOKEN=${VAULT_TOKEN}";
-       export "VAULT_HOST=${VAULT_HOST}";
-       export "VAULT_PORT=${VAULT_PORT}";
-       export "GITLAB_USER=${GITLAB_USER}";
-       export "GITLAB_PASS=${GITLAB_PASS}";
+       "export "VAULT_TOKEN=${VAULT_TOKEN}";
+       "export "VAULT_HOST=${VAULT_HOST}";
+       "export "VAULT_PORT=${VAULT_PORT}";
+       "export "GITLAB_USER=${GITLAB_USER}";
+       "export "GITLAB_PASS=${GITLAB_PASS}";
       /bin/bash -s " < ./backend/backend_deploy.sh 

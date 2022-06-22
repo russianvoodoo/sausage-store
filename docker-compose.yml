@@ -28,9 +28,9 @@ services:
     image: vault
     container_name: vault
     environment:
-      VAULT_TOKEN: ${VAULT_TOKEN}
-      VAULT_SERVER: ${VAULT_HOST}
-      VAULT_ADDR: ${VAULT_PORT}
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT_TOKEN_ID}
+      VAULT_SERVER: ${VAULT_SERVER}
+      VAULT_ADDR: ${VAULT_ADDR}
     networks:
       - sausage-store
 

@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   backend:
-    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/backend:${BACKEND_VERSION}
+    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/backend:${VERSION}
     container_name: sausage-store-backend
     environment:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
@@ -18,7 +18,7 @@ services:
     networks:
       - sausage-store
   frontend:
-    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/frontend:${FRONTEND_VERSION}
+    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/frontend:${VERSION}
     container_name: sausage-store-frontend
     ports:
       - "80:80"

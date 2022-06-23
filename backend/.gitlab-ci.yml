@@ -24,9 +24,6 @@ make-artifacts:
     - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -Dmaven.test.skip
     - mkdir sausage-store-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
     - cp target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar # копирование собранного бэкенда
-  rules:
-     - changes:
-          - backend/*   
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 

@@ -24,9 +24,7 @@ make-artifacts:
     - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -Dmaven.test.skip
     - mkdir sausage-store-report-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
     - cp target/sausage-store-report-${VERSION}.jar sausage-store-report-${VERSION}/sausage-store-report-${VERSION}.jar # копирование собранного бэкенда
-  rules:
-     - changes:
-          - backend-report/*   
+
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
@@ -38,19 +36,19 @@ spotbugs-sast:
     COMPILE: "false"
     MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
 
-sonarqube-backend-sast:
-  stage: test
-  image: maven:3.8-openjdk-16
-  dependencies:
-    - make-artifacts
-  script:
-    - cd backend-report
-    - >
-      mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
-      -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND_REPORT
-      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД_РЭПОРТ
-      -Dsonar.host.url=https://${SONAR_URL}
-      -Dsonar.login=${SONAR_LOGIN} 
+# sonarqube-backend-sast:
+#   stage: test
+#   image: maven:3.8-openjdk-16
+#   dependencies:
+#     - make-artifacts
+#   script:
+#     - cd backend-report
+#     - >
+#       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
+#       -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND_REPORT
+#       -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД_РЭПОРТ
+#       -Dsonar.host.url=https://${SONAR_URL}
+#       -Dsonar.login=${SONAR_LOGIN} 
 
 #release:
 #   stage: release

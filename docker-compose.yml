@@ -1,38 +1,59 @@
 version: "3.3"
 services:
   backend:
-    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/sausage-backend:${VERSION}
+    image: gitlab.praktikum-services.ru:5050/russianvoodoo4/sausage-store/sausage-backend:${VERSION}
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      args: 
+        VERSION: ${VERSION}
     container_name: sausage-backend
     environment:
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_URL: jdbc:postgresql://${SPRING_DATASOURCE_HOST}:${SPRING_DATASOURCE_PORT}/${SPRING_DATASOURCE_DATABASE}
-      SPRING_FLYWAY_BASELINE-ON-MIGRATE: "true"
-      SPRING_CLOUD_VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_PORT: ${VAULT_PORT}
+      VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_HOST: ${VAULT_HOST}
+
+      # SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      # SPRING_DATASOURCE_URL: jdbc:postgresql://${SPRING_DATASOURCE_HOST}:${SPRING_DATASOURCE_PORT}/${SPRING_DATASOURCE_DATABASE}
+      # SPRING_FLYWAY_BASELINE-ON-MIGRATE: "true"
+      # SPRING_CLOUD_VAULT_TOKEN: ${VAULT_TOKEN}
     networks:
       - sausage-store
   backend-report:
-    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/backend-report:${VERSION}
+    image: gitlab.praktikum-services.ru:5050/russianvoodoo4/sausage-store/backend-report:${VERSION}
+    build:
+      context: backend-report
+      dockerfile: Dockerfile
+      args: 
+        VERSION: ${VERSION}
     container_name: backend-report
     environment:
-      SPRING_CLOUD_VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_PORT: ${VAULT_PORT}
+      VAULT_TOKEN: ${VAULT_TOKEN}
+      VAULT_HOST: ${VAULT_HOST}
     networks:
       - sausage-store
   frontend:
-    image: gitlab.praktikum-services.ru:5050/<username>/sausage-store/sausage-frontend:${VERSION}
+    image: gitlab.praktikum-services.ru:5050/russianvoodoo4/sausage-store/sausage-frontend:${VERSION}
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args: 
+        VERSION: ${VERSION}
     container_name: sausage-frontend
     ports:
       - "8080:80"
     networks:
       - sausage-store
-  vault:
-    image: vault
-    container_name: vault
-    environment:
-      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT_TOKEN_ID}
-      VAULT_SERVER: ${VAULT_SERVER}
-      VAULT_ADDR: ${VAULT_ADDR}
-    networks:
-      - sausage-store
+  # vault:
+  #   image: vault
+  #   container_name: vault
+  #   environment:
+  #     VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT_TOKEN_ID}
+  #     VAULT_SERVER: ${VAULT_SERVER}
+  #     VAULT_ADDR: ${VAULT_ADDR}
+  #   networks:
+  #     - sausage-store
 
 networks:
   sausage-store:

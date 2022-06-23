@@ -1,6 +1,6 @@
 # release
 FROM openjdk:16-jdk-alpine
-ARG VERSION=${VERSION}
+ARG VERSION
 WORKDIR /app
 RUN apk -U add curl && curl https://storage.yandexcloud.net/cloud-certs/CA.pem -o YandexInternalRootCA.crt
 # подкидываем CA-сертификат Яндекса в хранилище сертификатов для Java

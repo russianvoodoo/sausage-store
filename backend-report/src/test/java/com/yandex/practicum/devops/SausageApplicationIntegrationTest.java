@@ -37,15 +37,15 @@ public class SausageApplicationIntegrationTest {
 //
 //    @Autowired private OrderController orderController;
 
-    @Test
-    public void contextLoads() {
+//    @Test
+//    public void contextLoads() {
 //        Assertions
 //          .assertThat(productController)
 //          .isNotNull();
 //        Assertions
 //          .assertThat(orderController)
 //          .isNotNull();
-    }
+//    }
 
 //    @Test
 //    public void givenGetProductsApiCall_whenProductListRetrieved_thenSizeMatchAndListContainsProductNames() {

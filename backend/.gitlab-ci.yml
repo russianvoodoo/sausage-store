@@ -117,4 +117,5 @@ deploy-backend:
        export "VAULT_PORT=${VAULT_PORT}";
        export "GITLAB_USER=${GITLAB_USER}";
        export "GITLAB_PASS=${GITLAB_PASS}";
+       export "CI_COMMIT_SHA=${CI_COMMIT_SHA}";
       /bin/bash -s " < ./backend/backend_deploy.sh 

@@ -60,4 +60,5 @@ deploy-frontend:
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "GITLAB_USER=${GITLAB_USER}";
        export "GITLAB_PASS=${GITLAB_PASS}";
+       export "CI_COMMIT_SHA=${CI_COMMIT_SHA}";
       /bin/bash -s " < ./frontend/frontend_deploy.sh 

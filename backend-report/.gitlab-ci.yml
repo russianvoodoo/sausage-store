@@ -47,8 +47,8 @@ sonarqube-backend-sast:
     - cd backend-report
     - >
       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
-      -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND
-      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД
+      -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND_REPORT
+      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД_РЭПОРТ
       -Dsonar.host.url=https://${SONAR_URL}
       -Dsonar.login=${SONAR_LOGIN} 
 
@@ -116,4 +116,5 @@ deploy-backend-report:
        export "VAULT_PORT=${VAULT_PORT}";
        export "GITLAB_USER=${GITLAB_USER}";
        export "GITLAB_PASS=${GITLAB_PASS}";
+       export "CI_COMMIT_SHA=${CI_COMMIT_SHA}";
       /bin/bash -s " < ./backend-report/backend_report_deploy.sh 

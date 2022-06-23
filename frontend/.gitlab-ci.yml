@@ -47,12 +47,6 @@ upload-frontend-latest:
 deploy-frontend:
   stage: deploy
   image: alpine:3.15.0
-  # если хотим сделать деплой по кнопке
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#      when: manual
-#    - if: '$CI_COMMIT_BRANCH == "test"'
-#      when: manual
   before_script:
     - apk add openssh-client bash
     - eval $(ssh-agent -s)
@@ -61,6 +55,7 @@ deploy-frontend:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:~
   script:
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "GITLAB_USER=${GITLAB_USER}";

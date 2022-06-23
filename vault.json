@@ -1,0 +1,6 @@
+{
+    "spring.data.mongodb.uri": "mongodb://izadokhin:Testusr1234@rc1a-7st7y0g1wv1w1pdi.mdb.yandexcloud.net:27018/izadokhin?tls=true",
+    "spring.datasource.password": "Testusr1234",
+    "spring.datasource.url": "jdbc:postgresql://rc1a-nk612bm46ahukyu4.mdb.yandexcloud.net:6432/izadokhin",
+    "spring.datasource.username": "izadokhin"
+  }

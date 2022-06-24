@@ -20,14 +20,15 @@ make-artifacts:
   script:
     - echo ${CI_PROJECT_DIR}
     - echo "ARTIFACT_JOB_ID=${CI_JOB_ID}" > CI_JOB_ID.txt  # сохранение номера задачи в файл, чтобы в дальнейшем использовать для копирования артефакта  
-    - cd backend
+    - cd backend-report
     - mvn package -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -Dmaven.test.skip
-    - mkdir sausage-store-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
-    - cp target/sausage-store-${VERSION}.jar sausage-store-${VERSION}/sausage-store-${VERSION}.jar # копирование собранного бэкенда
+    - mkdir sausage-store-report-${VERSION}  # создание директории, в которую копируются артефакты. Это нужно для организации удобной структуры архива
+    - cp target/sausage-store-report-${VERSION}.jar sausage-store-report-${VERSION}/sausage-store-report-${VERSION}.jar # копирование собранного бэкенда
+
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/.m2/ # сохранение зависимостей для SAST 
-      - ${CI_PROJECT_DIR}/backend/sausage-store-${VERSION}/sausage-store-${VERSION}.jar # сохранение собранного бэкенда как артефакт
+      - ${CI_PROJECT_DIR}/backend-report/sausage-store-report-${VERSION}/sausage-store-report-${VERSION}.jar # сохранение собранного бэкенда как артефакт
 
 spotbugs-sast:
   variables:
@@ -35,50 +36,50 @@ spotbugs-sast:
     COMPILE: "false"
     MAVEN_REPO_PATH: ${CI_PROJECT_DIR}/.m2/repository
 
-sonarqube-backend-sast:
-  stage: test
-  image: maven:3.8-openjdk-16
-  dependencies:
-    - make-artifacts
-  script:
-    - cd backend
-    - >
-      mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
-      -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND
-      -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД
-      -Dsonar.host.url=https://${SONAR_URL}
-      -Dsonar.login=${SONAR_LOGIN} 
+# sonarqube-backend-sast:
+#   stage: test
+#   image: maven:3.8-openjdk-16
+#   dependencies:
+#     - make-artifacts
+#   script:
+#     - cd backend-report
+#     - >
+#       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
+#       -Dsonar.projectKey=04_ILYAZADOKHIN_BACKEND_REPORT
+#       -Dsonar.projectName=04_ИЛЬЯЗАДОХИН_БЭКЭНД_РЭПОРТ
+#       -Dsonar.host.url=https://${SONAR_URL}
+#       -Dsonar.login=${SONAR_LOGIN} 
 
 #release:
 #   stage: release
 #   script:
-#      - cd backend
+#      - cd backend-report
 #      - mvn deploy -DskipTests -Dversion.application=${VERSION} -Dmaven.repo.local=${MAVEN_REPO_PATH} -s settings.xml
 #   rules:
 #      - changes:
-#           - backend/*
+#           - backend-report/*
 
-build-backend:
+build-backend-report:
    stage: docker-build
    image: docker:20.10.12-dind-rootless
    dependencies:
      - make-artifacts
    before_script:
-     - cp ${CI_PROJECT_DIR}/backend/sausage-store-${VERSION}/sausage-store-${VERSION}.jar .
+     - cp ${CI_PROJECT_DIR}/backend-report/sausage-store-report-${VERSION}/sausage-store-report-${VERSION}.jar .
      - until docker info; do sleep 1; done
      # переменные CI_REGISTRY_USER, CI_REGISTRY_PASSWORD, CI_REGISTRY генерятся Гитлабом, их задавать не надо
      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
    script:
-     - cd backend
+     - cd backend-report
      - >
         docker build
         --build-arg VERSION=$VERSION 
-        --tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+        --tag $CI_REGISTRY_IMAGE/backend-report:$CI_COMMIT_SHA
         .
-     - docker push $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+     - docker push $CI_REGISTRY_IMAGE/backend-report:$CI_COMMIT_SHA
    rules:
       - changes:
-           - backend/*   
+           - backend-report/*   
 
 upload-backend-latest:
   variables:
@@ -89,12 +90,12 @@ upload-backend-latest:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+    - docker pull $CI_REGISTRY_IMAGE/backend-report:$CI_COMMIT_SHA
     # если образ прошел проверки в CI (сканирование, тесты и т.д), то тегаем latest
-    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
+    - docker tag $CI_REGISTRY_IMAGE/backend-report:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/backend-report:latest
+    - docker push $CI_REGISTRY_IMAGE/backend-report:latest
 
-deploy-backend:
+deploy-backend-report:
   stage: deploy
   image: alpine:3.15.0
   before_script:
@@ -108,11 +109,10 @@ deploy-backend:
     - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:~
   script:
     - ssh ${DEV_USER}@${DEV_HOST}
-      "export "VERSION=${VERSION}";
-       export "VAULT_TOKEN=${VAULT_TOKEN}";
+      "export "VAULT_TOKEN=${VAULT_TOKEN}";
        export "VAULT_HOST=${VAULT_HOST}";
        export "VAULT_PORT=${VAULT_PORT}";
        export "GITLAB_USER=${GITLAB_USER}";
        export "GITLAB_PASS=${GITLAB_PASS}";
        export "CI_COMMIT_SHA=${CI_COMMIT_SHA}";
-      /bin/bash -s " < ./backend/backend_deploy.sh 
+      /bin/bash -s " < ./backend-report/backend_report_deploy.sh 

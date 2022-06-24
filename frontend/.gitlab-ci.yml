@@ -26,9 +26,6 @@ build-frontend:
         --tag $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA
         .
      - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$CI_COMMIT_SHA
-   rules:
-      - changes:
-           - frontend/*   
 
 upload-frontend-latest:
   variables:
@@ -47,12 +44,6 @@ upload-frontend-latest:
 deploy-frontend:
   stage: deploy
   image: alpine:3.15.0
-  # если хотим сделать деплой по кнопке
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#      when: manual
-#    - if: '$CI_COMMIT_BRANCH == "test"'
-#      when: manual
   before_script:
     - apk add openssh-client bash
     - eval $(ssh-agent -s)
@@ -61,8 +52,10 @@ deploy-frontend:
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
+    - scp docker-compose.yml ${DEV_USER}@${DEV_HOST}:~
   script:
     - ssh ${DEV_USER}@${DEV_HOST}
       "export "GITLAB_USER=${GITLAB_USER}";
        export "GITLAB_PASS=${GITLAB_PASS}";
+       export "CI_COMMIT_SHA=${CI_COMMIT_SHA}";
       /bin/bash -s " < ./frontend/frontend_deploy.sh 

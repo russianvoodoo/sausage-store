@@ -7,11 +7,11 @@ services:
     #   dockerfile: Dockerfile
     #   args: 
     #     VERSION: ${VERSION}
-    container_name: sausage-backend
     environment:
       VAULT_PORT: ${VAULT_PORT}
       VAULT_TOKEN: ${VAULT_TOKEN}
       VAULT_HOST: ${VAULT_HOST}
+      VIRTUAL_HOST: test2
 
       # SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       # SPRING_DATASOURCE_URL: jdbc:postgresql://${SPRING_DATASOURCE_HOST}:${SPRING_DATASOURCE_PORT}/${SPRING_DATASOURCE_DATABASE}
@@ -41,8 +41,12 @@ services:
     #   args: 
     #     VERSION: ${VERSION}
     container_name: sausage-frontend
+    environment:
+      - DEFAULT_HOST=test2
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
-      - "8080:80"
+      - "80:80"
     networks:
       - sausage-store
   # vault:

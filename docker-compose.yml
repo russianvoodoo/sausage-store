@@ -30,11 +30,11 @@ services:
       - sausage-store
   backend-report:
     image: gitlab.praktikum-services.ru:5050/russianvoodoo4/sausage-store/backend-report:${CI_COMMIT_SHA}
-    build:
-      context: backend-report
-      dockerfile: Dockerfile
-      args: 
-        VERSION: ${VERSION}
+    # build:
+    #   context: backend-report
+    #   dockerfile: Dockerfile
+    #   args: 
+    #     VERSION: ${VERSION}
     container_name: backend-report
     environment:
       VAULT_PORT: ${VAULT_PORT}

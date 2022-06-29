@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.4"
 services:
   backend:
     image: gitlab.praktikum-services.ru:5050/russianvoodoo4/sausage-store/sausage-backend:${CI_COMMIT_SHA}

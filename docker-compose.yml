@@ -11,11 +11,11 @@ services:
       timeout: 10s
       start_period: 20s
       retries: 6 
-    build:
-      context: backend
-      dockerfile: Dockerfile
-      args: 
-        VERSION: ${VERSION}
+    # build:
+    #   context: backend
+    #   dockerfile: Dockerfile
+    #   args: 
+    #     VERSION: ${VERSION}
     environment:
       VAULT_PORT: ${VAULT_PORT}
       VAULT_TOKEN: ${VAULT_TOKEN}
@@ -44,11 +44,11 @@ services:
       - sausage-store
   frontend:
     image: gitlab.praktikum-services.ru:5050/russianvoodoo4/sausage-store/sausage-frontend:${CI_COMMIT_SHA}
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      args: 
-        VERSION: ${VERSION}
+    # build:
+    #   context: frontend
+    #   dockerfile: Dockerfile
+    #   args: 
+    #     VERSION: ${VERSION}
     container_name: sausage-frontend
     environment:
       - DEFAULT_HOST=test2

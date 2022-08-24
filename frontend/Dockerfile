@@ -5,13 +5,10 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-FROM nginxproxy/nginx-proxy
-WORKDIR /app
+FROM nginx:latest
 
 # RUN rm -rf /usr/share/nginx/html/
 COPY --from=builder /usr/src/app/dist/frontend/*.* /usr/share/nginx/html/
-COPY ./nginx.tmpl /app/
-
 EXPOSE 8080
 
-# ENTRYPOINT ["nginx", "-g", "daemon off;"]
+#ENTRYPOINT ["nginx", "-g", "daemon off;"]
